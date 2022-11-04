@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Title</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <style>
+        .avatar {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body class="container">
+        <input type="search" name="search" id="search" onkeyup="srchData();">
+        <br><br>
+        <button class="btn btn-primary" onclick="getData(1);">Get Data</button>
+    <br>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Avatar</th>
+                <th>Id</th>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+            </tr>
+        </thead>
+        <tbody id="users">
+
+        </tbody>
+    </table>
+    <ul class="pagination">
+        <!-- <li class="page-item"><button class="page-link disabled" onclick="getData(1)" id="prev">Previous</button></li>
+        <li class="page-item"><button class="page-link" onclick="getData(2)" id="next">Next</button></li> -->
+        <li class="page-item  disabled"  id="prev"><a href="#" class="page-link" onclick="getData(1)">Previous</a></li>
+        <li class="page-item" id="next"><a href="#" class="page-link" onclick="getData(2)" >Next</a></li>
+    </ul>
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+        </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+        integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+        </script>
+
+    <script>
+        var search =  document.getElementById("search").value;
+        var tbody = document.getElementById("users");
+        function srchData() {
+
+
+
+            // var http = new XMLHttpRequest();
+            // http.onreadystatechange = function(){
+            //     if (this.readyState == 4 && this.status == 200){
+            //         var data = this.responseText;
+            //         var jsonData = JSON.parse(data);
+
+            //         jsonData.data.forEach(function(user){
+            //             var row = `
+            //             <tr>
+            //                 <td>
+            //                     <img src="${user.avatar}" class="avatar">
+            //                 </td>
+            //                 <td>${user.id}</td>
+            //                 <td>${user.email}</td>
+            //                 <td>${user.first_name}</td>
+            //                 <td>${user.last_name}</td>
+            //             </tr>`;
+            //             tbody.innerHTML += row;
+            //         });
+            //     }
+            // }
+            // http.open('GET', 'https://reqres.in/api/users');
+            // http.send();
+            var search =  document.getElementById("search").value;
+            var s = new RegExp(search);
+            console.log(search);
+            fetch('https://reqres.in/api/users')
+                .then(response => response.json())
+                .then(json => {
+                    tbody.innerHTML = "";
+                    if(search == ""){
+                        json.data.forEach(function (user) {
+                        ptable(user);})
+                    }
+                    var ufound = false;
+                    tbody.innerHTML = "";
+                    json.data.forEach(function (user) {     
+                        if(s.test(user.first_name)){
+                            console.log(s.test(user.first_name));
+                            ptable(user);
+                            ufound = true;
+                        }
+                        // else if(!(s.test(user.first_name))){
+                        //     let rw = `  
+                        // <tr>
+                        //     <td colspan = 5>NO DATA FOUND</td>
+                        // </tr>`;
+                        // tbody.innerHTML = rw;
+                        // }
+                        
+                    });
+                    if(ufound = false)
+                    {
+                        let rw = `  
+                        <tr>
+                            <td colspan = 5>NO DATA FOUND</td>
+                        </tr>`;
+                        tbody.innerHTML = rw;
+                    }
+                });
+        }
+        function getData(pg)
+        {   var prev = document.getElementById("prev");
+            var next = document.getElementById("next");
+            fetch(`https://reqres.in/api/users?page=${pg}`)
+                .then(response => response.json())
+                .then(json => { 
+                    tbody.innerHTML = '';
+                    json.data.forEach(user =>{
+                        ptable(user);
+                    })
+                });
+            if(pg == 1){
+                prev.classList.add("disabled");
+                next.classList.remove("disabled");
+            }
+            else{
+                prev.classList.remove("disabled");
+                next.classList.add("disabled");
+            }
+        }
+        function ptable(user){
+            var row = `
+                        <tr>
+                            <td>
+                                <img src="${user.avatar}" class="avatar">
+                            </td>
+                            <td>${user.id}</td>
+                            <td>${user.email}</td>
+                            <td>${user.first_name}</td>
+                            <td>${user.last_name}</td>
+                        </tr>`;
+                        tbody.innerHTML += row;
+        }
+    </script>
+</body>
+
+</html>
