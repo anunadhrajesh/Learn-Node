@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #red{
+            width: 200px;
+            position: absolute;
+            height: 200px;
+            background-color: red;
+        }
+        #blue{
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            background-color: rgb(0, 0, 255,0.6);
+            top: 100px;
+            left: 100px;
+        }
+        indexl{
+            z-index: 1;
+        }
+        indexh{
+            z-index: 3;
+        }
+    </style>
+</head>
+<body>
+    <div id="red" onclick="changeindex(1);"></div>
+    <div id="blue" onclick="changeindex(0);"></div>
+    <script>
+        var red = document.getElementById("red");
+        var blue = document.getElementById("blue");
+        function changeindex(flag){
+            if(flag){
+                red.style.zIndex = 3;
+                blue.style.zIndex = 1;
+            }
+            else{
+                red.style.zIndex = 1;
+                blue.style.zIndex = 3;
+            }
+        }
+    </script>
+</body>
+</html>
